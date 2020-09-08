@@ -1,0 +1,5 @@
+<div class="d-flex" *ngIf="error">
+    <p>{{error.title}}</p>
+    <p *ngIf="error.data">{{error.data}}</p>
+    <button (click)="closeError()">OK</button>
+</div>

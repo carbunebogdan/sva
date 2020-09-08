@@ -1,4 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  &:focus {
+    outline: none;
+  }
+}
+
+.fill {
+  height: 100vh;
+}
+
+.card {
+  @extend .m-5, .p-5, .rounded, .shadow-lg;
+
+  .card-logo {
+    img {
+      max-height: 5rem;
+    }
+  }
+
+  .card-content {
+    @extend .my-auto;
+
+    .card-content-item {
+    }
+  }
+
+  .card-actions {
+    @extend .d-flex, .justify-content-end, .mt-auto;
+
+    .card-actions-item {
+      button {
+        @extend .mx-1;
+        border-radius: 30px;
+        border: none;
+        padding: 0.5rem 1rem;
+      }
+    }
+  }
+}
+
+.font-xlarge {
+  font-size: 1.5em;
+}
+
+.text-container {
+  @extend .text-break;
+  font-size: 1.1em;
+}

@@ -1,0 +1,66 @@
+<div class="card-media"></div>
+<div class="card-content">
+    <form class="card-content-item" #questionForm="ngForm">
+        <div class="container text-center text-container" [innerHtml]="questions[subPhase].title">
+        </div>
+        <div class="container d-flex flex-column justify-content-center my-5" [ngSwitch]="questions[subPhase].type">
+            <!-- multiselect -->
+            <ng-container *ngSwitchCase="'multiselect'">
+                <label *ngFor="let answer of questions[subPhase].answers; let i = index"
+                    class="d-flex my-2 p-3 align-items-center border" for="answer-{{subPhase}}-{{i}}">
+                    <input type="checkbox" class="mx-2" id="answer-{{subPhase}}-{{i}}" name="answer-{{subPhase}}-{{i}}"
+                        [(ngModel)]="answer.toggle">
+                    <div>{{answer.label}}</div>
+                </label>
+                <textarea class="border p-3" [style.background-color]="design.color_background"
+                    [style.color]="design.color_card"
+                    [(ngModel)]="questions[subPhase].textField"
+                    name="answer-{{subPhase}}-{{i}}-textField"
+                    *ngIf="questions[subPhase].hasFreetext && questions[subPhase].answers[questions[subPhase].answers.length - 1].toggle"
+                    [placeholder]="questions[subPhase].freeTextLabel" cols="30" rows="10"></textarea>
+            </ng-container>
+
+            <!-- select -->
+            <ng-container *ngSwitchCase="'select'">
+                <label *ngFor="let answer of questions[subPhase].answers; let i = index"
+                    class="d-flex my-2 p-3 align-items-center border" for="answer-{{subPhase}}-{{i}}">
+                    <input type="radio" class="mx-2" id="answer-{{subPhase}}-{{i}}" name="answer-{{subPhase}}-{{i}}"
+                        [(ngModel)]="questions[subPhase].selection" [value]="answer.id">
+                    <div>{{answer.label}}</div>
+                </label>
+            </ng-container>
+
+            <!-- open -->
+            <ng-container *ngSwitchCase="'open'">
+                <textarea class="border p-3" [style.background-color]="design.color_background"
+                    [style.color]="design.color_card" cols="30" rows="10" name="textarea-{{subPhase}}-1"
+                    [(ngModel)]="questions[subPhase].textModel"></textarea>
+            </ng-container>
+
+            <!-- form -->
+            <ng-container *ngSwitchCase="'form'">
+                <div *ngFor="let answer of questions[subPhase].formItems; let i = index"
+                    class="d-flex my-2 p-3 align-items-center border flex-column">
+                    <label for="answer-{{subPhase}}-{{i}}">{{answer.label}}</label>
+                    <input [type]="answer.type" class="p-2 border rounded" name="answer-{{subPhase}}-{{i}}"
+                        [style.background-color]="design.color_background" [style.color]="design.color_card"
+                        [(ngModel)]="answer.model" [required]="answer.required">
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</div>
+<div class="card-actions">
+    <div class="card-actions-item">
+        <button [style.background-color]="design.color_button" [style.color]="design.color_button_text"
+            (click)="changeSubPhase(-1)">
+            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-left" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+            </svg>
+        </button>
+        <button [style.background-color]="design.color_button" [style.color]="design.color_button_text"
+            (click)="changeSubPhase(1)">{{ nextButtonLabel }}</button>
+    </div>
+</div>
