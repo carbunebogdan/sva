@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Question, MultiselectQuestion, SelectQuestion, OpenQuestion, FormQuestion } from '../obj/question.class';
-import { FormErrorService } from '../form-error.service';
+import { Question, MultiselectQuestion, SelectQuestion, OpenQuestion, FormQuestion } from '../../obj/question.class';
+import { FormErrorService } from '../../services/form-error/form-error.service';
 
 @Component({
   selector: 'app-questionnaire',
@@ -28,11 +28,14 @@ export class QuestionnaireComponent implements OnInit {
     let parsed: Question[] = [];
     questions.forEach(question => {
       let questionType
+      // check question type
       if (question.type.object_name == "text_choice") {
         questionType = question.type.params['1']?.type?.filter(obj => obj.key == "type")[0].value;
       } else {
         questionType = question.type?.object_name;
       }
+
+      // depending on its type, create the proper class instance for a question
       switch (questionType) {
         case "multiple":
           parsed.push(new MultiselectQuestion(question));
@@ -56,26 +59,39 @@ export class QuestionnaireComponent implements OnInit {
   changeSubPhase = (a) => {// a = increment or decrement
     if (this.subPhase == 0 && a < 0) {
       this.onPhaseEnd.emit({ phase: 0 }); //go to intro
-    } else if (this.subPhase == (this.data.questions.length - 1) && a > 0) {
-      this.onPhaseEnd.emit({ phase: 2, data: this.formatResponseData(this.questions) }); //go to outro
     } else {
-      // validate and save form
-      let validity = this.questions[this.subPhase].getValidity();
-      if (validity.valid && a > 0) {
+      if (this.isQuestionValid(this.questions[this.subPhase]) && a > 0) {
+        if (this.subPhase == (this.data.questions.length - 1)) {
+          this.onPhaseEnd.emit({ phase: 2, data: this.formatResponseData(this.questions) }); //go to outro
+          return
+        }
+        // go to next question
         this.subPhase += a;
         this.checkRules();
         if (this.questions[this.subPhase].hidden) {
+          // skip current question if is disabled
           this.changeSubPhase(1);
         }
-      } else if (!validity.valid && a > 0) {
-        this.formErrorService.showError(validity);
       } else if (a < 0) {
+        // if we step backwards there is no need to check for errors
         this.subPhase += a;
       }
     }
   }
 
+  isQuestionValid = (question): boolean => {
+    // check for errors
+    let validity = question.getValidity();
+    // if there is an error, send it to form error service
+    if (!validity.valid && validity.error)
+      this.formErrorService.showError(validity);
+
+    return validity.valid;
+  }
+
   checkRules = () => {
+    // basic implementation of the rules mechanism, this needs to be more generic..and fail proof
+
     this.rules.forEach((rule) => {
       let flag = true;
       rule.conditions.forEach((condition) => {
@@ -113,6 +129,7 @@ export class QuestionnaireComponent implements OnInit {
     });
   }
 
+  // aggregate all question responses into one object, each property represents a question answer
   formatResponseData = (questions) => {
     return questions.reduce((obj, q) => (obj = { ...obj, ...q.getData() }, obj), {})
   }

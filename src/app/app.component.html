@@ -1,42 +1,26 @@
-<app-form-error></app-form-error>
-<div class="container-fluid fill" [style.backgroundColor]="questionnaireStructure?.design?.color_background">
-  {{ questionnaireStructure == undefined ? 'loading questionnaire' : ''}}
-  <div class="row h-100" *ngIf="questionnaireStructure">
-    <div class="card w-100" [style.backgroundColor]="questionnaireStructure?.design?.color_background"
-      [style.color]="questionnaireStructure?.design?.color_card">
-      <div class="card-logo">
-        <img [src]="questionnaireStructure.design.logo">
+<div class="d-flex fill flex-column" *ngIf="questionnaire">
+  <app-form-error [backgroundColor]="design.color1" [textColor]="design.color3"></app-form-error>
+  <div class="container-fluid h-100" [style.backgroundColor]="design.color_background">
+    <div class="row h-100">
+      <div class="card" [style.backgroundColor]="design.color_background" [style.color]="design.color_card">
+        <div class="card-logo">
+          <img [src]="design.logo">
+        </div>
+        <!-- intro screen -->
+        <app-intro-screen *ngIf="phase==0" [translations]="translations" [design]="design"
+          (onStart)="changePhase($event)"></app-intro-screen>
+
+        <!-- questionnaire -->
+        <!-- we use hidden instead of *ngIf to preserve questionnaire state -->
+        <app-questionnaire [hidden]="phase != 1" (onPhaseEnd)="changePhase($event)" [data]="questionnaire"
+          [design]="design" [nextButtonLabel]="translations.labels.next_question" [rules]="rules">
+        </app-questionnaire>
+
+        <!-- outro screen -->
+        <app-outro-screen *ngIf="phase==2 && quizData" [translations]="translations" [data]="quizData">
+        </app-outro-screen>
       </div>
-      <ng-container *ngIf="phase==0">
-        <div class="card-media"></div>
-        <div class="card-content">
-          <div class="card-content-item">
-            <div class="container text-center text-container" [innerHtml]="translations.intro.text">
-            </div>
-          </div>
-        </div>
-        <div class="card-actions">
-          <div class="card-actions-item">
-            <button [style.background-color]="questionnaireStructure?.design?.color_button"
-              [style.color]="questionnaireStructure?.design?.color_button_text"
-              (click)="start()">{{ translations.labels.start_survey }}</button>
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="phase==1">
-        <app-questionnaire class="h-100" (onPhaseEnd)="changePhase($event)"
-          [data]="questionnaireStructure.questionblocks[0]" [design]="questionnaireStructure?.design"
-          [nextButtonLabel]="translations.labels.next_question" [rules]="questionnaireStructure.rules"></app-questionnaire>
-      </ng-container>
-      <ng-container *ngIf="phase==2">
-        <div class="card-media"></div>
-        <div class="card-content">
-          <div class="card-content-item">
-            <div class="container text-center text-container" [innerHtml]="quizResponse">
-            </div>
-          </div>
-        </div>
-      </ng-container>
     </div>
   </div>
 </div>
+{{ questionnaire == undefined ? 'loading questionnaire' : ''}}

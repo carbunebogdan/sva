@@ -1,5 +1,4 @@
-import { FormErrorService } from "../form-error.service";
-
+// question base class
 export class Question {
     public type;
     public answers = [];
@@ -41,6 +40,7 @@ export class MultiselectQuestion extends Question {
     }
 
     public getValidity(): any {
+        // basic validation
         if (!this.mandatory) {
             return {
                 valid: true
@@ -65,6 +65,7 @@ export class MultiselectQuestion extends Question {
 
     public getData() {
         if (this.getValidity())
+            // used tokens from outro translation text to define the return format, this way is easier to parse
             return {
                 [`q${this.order}_response`]: this.answers.filter(answer => answer.toggle).map(answer => answer.label).join(', '),
                 [`q${this.order}_comments`]: this.textField
@@ -155,7 +156,8 @@ export class FormQuestion extends Question {
             type: answer.type.split(' ')[1],
             model: null,
             required: answer.mandatory,
-            order: answer.order
+            order: answer.order,
+            valid: false
         }))
     }
 
@@ -166,6 +168,8 @@ export class FormQuestion extends Question {
             };
         }
 
+        let isValid = true;
+
         for (let item of this.formItems) {
             if (item.required && !item.model) {
                 return {
@@ -173,10 +177,13 @@ export class FormQuestion extends Question {
                     data: item.label
                 }
             }
+            if (!item.valid) {
+                isValid = false;
+            }
         }
 
         return {
-            valid: true,
+            valid: isValid,
         };;
     }
 

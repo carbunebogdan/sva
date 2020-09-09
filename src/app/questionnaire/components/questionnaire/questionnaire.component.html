@@ -13,8 +13,7 @@
                     <div>{{answer.label}}</div>
                 </label>
                 <textarea class="border p-3" [style.background-color]="design.color_background"
-                    [style.color]="design.color_card"
-                    [(ngModel)]="questions[subPhase].textField"
+                    [style.color]="design.color_card" [(ngModel)]="questions[subPhase].textField"
                     name="answer-{{subPhase}}-{{i}}-textField"
                     *ngIf="questions[subPhase].hasFreetext && questions[subPhase].answers[questions[subPhase].answers.length - 1].toggle"
                     [placeholder]="questions[subPhase].freeTextLabel" cols="30" rows="10"></textarea>
@@ -44,7 +43,8 @@
                     <label for="answer-{{subPhase}}-{{i}}">{{answer.label}}</label>
                     <input [type]="answer.type" class="p-2 border rounded" name="answer-{{subPhase}}-{{i}}"
                         [style.background-color]="design.color_background" [style.color]="design.color_card"
-                        [(ngModel)]="answer.model" [required]="answer.required">
+                        [ngClass]="{'border-danger': !answer.valid && answer.model}" [(ngModel)]="answer.model"
+                        [required]="answer.required" #formItem (ngModelChange)="answer.valid = formItem.validity.valid">
                 </div>
             </ng-container>
         </div>

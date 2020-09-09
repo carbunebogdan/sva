@@ -3,6 +3,8 @@
 /* Importing Bootstrap SCSS file. */
 @import "~bootstrap/scss/bootstrap";
 
+
+/* Some basic styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -10,6 +12,11 @@
 }
 
 button {
+  @extend .mx-1;
+  border-radius: 30px;
+  border: none;
+  padding: 0.5rem 1rem;
+
   &:focus {
     outline: none;
   }
@@ -20,7 +27,7 @@ button {
 }
 
 .card {
-  @extend .m-5, .p-5, .rounded, .shadow-lg;
+  @extend .m-5, .p-5, .rounded, .shadow-lg, .d-flex, .w-100;
 
   .card-logo {
     img {
@@ -30,22 +37,10 @@ button {
 
   .card-content {
     @extend .my-auto;
-
-    .card-content-item {
-    }
   }
 
   .card-actions {
     @extend .d-flex, .justify-content-end, .mt-auto;
-
-    .card-actions-item {
-      button {
-        @extend .mx-1;
-        border-radius: 30px;
-        border: none;
-        padding: 0.5rem 1rem;
-      }
-    }
   }
 }
 

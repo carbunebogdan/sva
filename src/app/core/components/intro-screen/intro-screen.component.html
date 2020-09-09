@@ -1,0 +1,13 @@
+<div class="card-media"></div>
+<div class="card-content">
+    <div class="card-content-item">
+        <div class="container text-center text-container" [innerHtml]="translations.intro.text">
+        </div>
+    </div>
+</div>
+<div class="card-actions">
+    <div class="card-actions-item">
+        <button [style.background-color]="design.color_button" [style.color]="design.color_button_text"
+            (click)="onStart.emit({phase:1})">{{ translations.labels.start_survey }}</button>
+    </div>
+</div>

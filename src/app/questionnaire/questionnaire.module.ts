@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuestionnaireComponent } from './questionnaire/questionnaire.component';
-import { QuestionComponent } from './question/question.component';
 import { FormsModule } from '@angular/forms';
-import { FormErrorComponent } from './form-error/form-error.component';
+import { QuestionnaireComponent } from './components/questionnaire/questionnaire.component';
+import { FormErrorComponent } from './components/form-error/form-error.component';
 
 
 
 @NgModule({
-  declarations: [QuestionnaireComponent, QuestionComponent, FormErrorComponent],
+  declarations: [QuestionnaireComponent, FormErrorComponent],
   imports: [
     CommonModule,
     FormsModule
