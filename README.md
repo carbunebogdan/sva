@@ -1,3 +1,6 @@
+Please run the project using `npm start` command, to also add the api proxy.
+
+
 # SvaQuestionnaire
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.3.
